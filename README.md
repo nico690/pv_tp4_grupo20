@@ -4,3 +4,4 @@
 
 -Rodrigo Nicolas Chavez. usuario: nico690
 -Gutierrez Nanda, Mauro Nahuel. usuario: MauroNanda
+-Iriarte Gloss Valentin Mateo. usuario: valentiniriar
