@@ -4,5 +4,6 @@
 
 -Rodrigo Nicolas Chavez. usuario: nico690<br>
 -Gutierrez Nanda, Mauro Nahuel. usuario: MauroNanda<br>
+-Tejerina, Fernando Javier. usuario: fertejj<br>
 -Iriarte Gloss Valentin Mateo. usuario: valentiniriar<br>
 -Facundo Churquina - usuario: facudebug123 <br>
