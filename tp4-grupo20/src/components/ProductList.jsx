@@ -1,14 +1,19 @@
 import React from 'react';
 import ProductItem from './ProductItem';
 
-function ProductList({ productos }) {
+function ProductList({ productos, searchTerm }) {
+  // Filtrar productos según el término de búsqueda
+  const productosFiltrados = productos.filter(producto =>
+    producto.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div>
       <h2>Lista de Productos</h2>
-      {productos.length === 0 ? (
+      {productosFiltrados.length === 0 ? (
         <p>No hay productos cargados.</p>
       ) : (
-        productos.map(producto => (
+        productosFiltrados.map(producto => (
           <ProductItem key={producto.id} producto={producto} />
         ))
       )}
