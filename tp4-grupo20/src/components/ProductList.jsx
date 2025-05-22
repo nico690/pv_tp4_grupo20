@@ -1,10 +1,14 @@
-import React from 'react';
-import ProductItem from './ProductItem';
+import React, { useMemo } from "react";
+import ProductItem from "./ProductItem";
 
 function ProductList({ productos, searchTerm }) {
   // Filtrar productos según el término de búsqueda
-  const productosFiltrados = productos.filter(producto =>
-    producto.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+  const productosFiltrados = useMemo(
+    () =>
+      productos.filter((producto) =>
+        producto.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
+    [productos, searchTerm]
   );
 
   return (
@@ -13,7 +17,7 @@ function ProductList({ productos, searchTerm }) {
       {productosFiltrados.length === 0 ? (
         <p>No hay productos cargados.</p>
       ) : (
-        productosFiltrados.map(producto => (
+        productosFiltrados.map((producto) => (
           <ProductItem key={producto.id} producto={producto} />
         ))
       )}
