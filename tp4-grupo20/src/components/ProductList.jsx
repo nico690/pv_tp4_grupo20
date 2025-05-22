@@ -1,5 +1,7 @@
-import React, { useMemo } from "react";
-import ProductItem from "./ProductItem";
+import React, { useMemo } from 'react';
+import ProductItem from './ProductItem';
+import '../styles/ProductList.css';
+
 
 function ProductList({ productos, searchTerm }) {
   // Filtrar productos según el término de búsqueda

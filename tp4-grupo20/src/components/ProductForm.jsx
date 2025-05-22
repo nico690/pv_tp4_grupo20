@@ -1,18 +1,7 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import '../styles/ProductForm.css';
 import { STRING_EMPTY } from "../utils/constant";
 
-const FIELD_NAMES = {
-  DESCRIPTION: "description",
-  UNIT_PRICE: "unitPrice",
-  DISCOUNT: "discount",
-  STOCK: "stock",
-};
-const INITIAL_VALUES = {
-  [FIELD_NAMES.DESCRIPTION]: STRING_EMPTY,
-  [FIELD_NAMES.UNIT_PRICE]: STRING_EMPTY,
-  [FIELD_NAMES.DISCOUNT]: STRING_EMPTY,
-  [FIELD_NAMES.STOCK]: STRING_EMPTY,
-};
 
 function ProductForm({ onAddProduct }) {
   const [values, setValues] = useState(INITIAL_VALUES);
