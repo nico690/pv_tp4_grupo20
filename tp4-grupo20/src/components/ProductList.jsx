@@ -5,12 +5,19 @@ function ProductList({ productos, searchTerm }) {
   // Filtrar productos según el término de búsqueda
   const productosFiltrados = useMemo(
     () =>
-      productos.filter((producto) =>
-        producto.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+      productos.filter(
+        (producto) =>
+          `${producto.id}`
+            .toLowerCase()
+            .trim()
+            .includes(searchTerm.toLowerCase()) ||
+          producto.descripcion
+            .toLowerCase()
+            .trim()
+            .includes(searchTerm.toLowerCase())
       ),
     [productos, searchTerm]
   );
-
   return (
     <div>
       <h2>Lista de Productos</h2>
