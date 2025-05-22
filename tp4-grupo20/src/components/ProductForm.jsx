@@ -1,48 +1,52 @@
 import React, { useState } from 'react';
 import '../styles/ProductForm.css';
+import { STRING_EMPTY } from "../utils/constant";
+
 
 function ProductForm({ onAddProduct }) {
-  const [descripcion, setDescripcion] = useState('');
-  const [precioUnitario, setPrecioUnitario] = useState('');
-  const [descuento, setDescuento] = useState('');
-  const [stock, setStock] = useState('');
+  const [values, setValues] = useState(INITIAL_VALUES);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
     switch (name) {
-      case 'descripcion':
-        setDescripcion(value);
+      case FIELD_NAMES.UNIT_PRICE:
+        if (!/^\d*\.?\d*$/.test(value)) return;
         break;
-      case 'precioUnitario':
-        if (/^\d*\.?\d*$/.test(value) || value === '') {
-           setPrecioUnitario(value);
-        }
+      case FIELD_NAMES.DISCOUNT:
+        if (!/^\d*$/.test(value)) return;
         break;
-      case 'descuento':
-        if (/^\d*$/.test(value) || value === '') {
-           setDescuento(value);
-        }
-        break;
-      case 'stock':
-        if (/^\d*$/.test(value) || value === '') {
-           setStock(value);
-        }
+      case FIELD_NAMES.STOCK:
+        if (!/^\d*$/.test(value)) return;
         break;
       default:
         break;
     }
+
+    setValues({ ...values, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const precio = parseFloat(precioUnitario);
-    const desc = parseInt(descuento, 10);
-    const stck = parseInt(stock, 10);        
+    const precio = parseFloat(values.unitPrice);
+    const desc = parseInt(values.discount, 10);
+    const stck = parseInt(values.stock, 10);
 
-    if (!descripcion || isNaN(precio) || precio < 0 || isNaN(desc) || desc < 0 || desc > 100 || isNaN(stck) || stck < 0) {
-        alert('Por favor, completa todos los campos correctamente. El descuento debe ser entre 0 y 100.');
-        return;
+    if (
+      !values.description ||
+      isNaN(precio) ||
+      precio < 0 ||
+      isNaN(desc) ||
+      desc < 0 ||
+      desc > 100 ||
+      isNaN(stck) ||
+      stck < 0
+    ) {
+      alert(
+        "Por favor, completa todos los campos correctamente. El descuento debe ser entre 0 y 100."
+      );
+      return;
     }
 
     const precioConDescuento = precio * (1 - desc / 100);
@@ -51,65 +55,62 @@ function ProductForm({ onAddProduct }) {
 
     const nuevoProducto = {
       id: id,
-      descripcion: descripcion,
+      descripcion: values.description,
       precioUnitario: precio,
-      descuento: desc,      
+      descuento: desc,
       precioConDescuento: precioConDescuento,
-      stock: stck           
+      stock: stck,
     };
 
     onAddProduct(nuevoProducto);
 
-    setDescripcion('');
-    setPrecioUnitario('');
-    setDescuento('');
-    setStock('');
+    setValues(INITIAL_VALUES);
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <h2>Agregar Producto</h2>
       <div>
-        <label htmlFor="descripcion">Descripción:</label>
+        <label htmlFor={FIELD_NAMES.DESCRIPTION}>Descripción:</label>
         <input
           type="text"
-          id="descripcion"
-          name="descripcion"
-          value={descripcion}
+          id={FIELD_NAMES.DESCRIPTION}
+          name={FIELD_NAMES.DESCRIPTION}
+          value={values.description}
           onChange={handleInputChange}
           required
         />
       </div>
       <div>
-        <label htmlFor="precioUnitario">Precio Unitario:</label>
+        <label htmlFor={FIELD_NAMES.UNIT_PRICE}>Precio Unitario:</label>
         <input
           type="number"
-          id="precioUnitario"
-          name="precioUnitario"
-          value={precioUnitario}
+          id={FIELD_NAMES.UNIT_PRICE}
+          name={FIELD_NAMES.UNIT_PRICE}
+          value={values.unitPrice}
           onChange={handleInputChange}
           step="0.01"
           required
         />
       </div>
-       <div>
-        <label htmlFor="descuento">Descuento (%):</label>
+      <div>
+        <label htmlFor={FIELD_NAMES.DISCOUNT}>Descuento (%):</label>
         <input
           type="number"
-          id="descuento"
-          name="descuento"
-          value={descuento}
+          id={FIELD_NAMES.DISCOUNT}
+          name={FIELD_NAMES.DISCOUNT}
+          value={values.discount}
           onChange={handleInputChange}
           required
         />
       </div>
       <div>
-        <label htmlFor="stock">Stock:</label>
+        <label htmlFor={FIELD_NAMES.STOCK}>Stock:</label>
         <input
           type="number"
-          id="stock"
-          name="stock"
-          value={stock}
+          id={FIELD_NAMES.STOCK}
+          name={FIELD_NAMES.STOCK}
+          value={values.stock}
           onChange={handleInputChange}
           required
         />
