@@ -1,4 +1,5 @@
 import React from 'react';
+import '../styles/ProductItem.css';
 
 function ProductItem({ producto }) {
   const { id, descripcion, precioUnitario, descuento, precioConDescuento, stock } = producto;
