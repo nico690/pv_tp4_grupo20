@@ -16,6 +16,10 @@ input {
   color: white;
 }
 
+label {
+  color: #fff;
+}
+
 button {
   padding: 10px 20px;
   background-color: #4caf50;
