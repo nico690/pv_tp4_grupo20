@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "../styles/ProductForm.css";
 import { STRING_EMPTY } from "../utils/constant";
 
@@ -15,8 +15,20 @@ const INITIAL_VALUES = {
   [FIELD_NAMES.STOCK]: STRING_EMPTY,
 };
 
-function ProductForm({ onAddProduct }) {
+function ProductForm({ onAddProduct, productSelected, onAddDate }) {
   const [values, setValues] = useState(INITIAL_VALUES);
+  useEffect(() => {
+    if (productSelected)
+      setValues({
+        description: productSelected.descripcion,
+        unitPrice: productSelected.precioUnitario,
+        discount: productSelected.descuento,
+        stock: productSelected.stock,
+      });
+    else {
+      setValues(INITIAL_VALUES);
+    }
+  }, [productSelected]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -38,50 +50,56 @@ function ProductForm({ onAddProduct }) {
     setValues({ ...values, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
 
-    const precio = parseFloat(values.unitPrice);
-    const desc = parseInt(values.discount, 10);
-    const stck = parseInt(values.stock, 10);
+      const precio = parseFloat(values.unitPrice);
+      const desc = parseInt(values.discount, 10);
+      const stck = parseInt(values.stock, 10);
 
-    if (
-      !values.description ||
-      isNaN(precio) ||
-      precio < 0 ||
-      isNaN(desc) ||
-      desc < 0 ||
-      desc > 100 ||
-      isNaN(stck) ||
-      stck < 0
-    ) {
-      alert(
-        "Por favor, completa todos los campos correctamente. El descuento debe ser entre 0 y 100."
-      );
-      return;
-    }
+      if (
+        !values.description ||
+        isNaN(precio) ||
+        precio < 0 ||
+        isNaN(desc) ||
+        desc < 0 ||
+        desc > 100 ||
+        isNaN(stck) ||
+        stck < 0
+      ) {
+        alert(
+          "Por favor, completa todos los campos correctamente. El descuento debe ser entre 0 y 100."
+        );
+        return;
+      }
 
-    const precioConDescuento = precio * (1 - desc / 100);
+      const precioConDescuento = precio * (1 - desc / 100);
+      const id = productSelected?.id ?? Date.now();
 
-    const id = Date.now();
+      const producto = {
+        id: id,
+        descripcion: values.description,
+        precioUnitario: precio,
+        descuento: desc,
+        precioConDescuento: precioConDescuento,
+        stock: stck,
+      };
 
-    const nuevoProducto = {
-      id: id,
-      descripcion: values.description,
-      precioUnitario: precio,
-      descuento: desc,
-      precioConDescuento: precioConDescuento,
-      stock: stck,
-    };
+      if (productSelected) {
+        onAddDate(producto);
+      } else {
+        onAddProduct(producto);
+      }
 
-    onAddProduct(nuevoProducto);
-
-    setValues(INITIAL_VALUES);
-  };
+      setValues(INITIAL_VALUES);
+    },
+    [values, productSelected, onAddDate, onAddProduct, setValues]
+  );
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Agregar Producto</h2>
+      <h2> {!productSelected ? "Agregar Producto" : "Modificar Producto"}</h2>
       <div>
         <label htmlFor={FIELD_NAMES.DESCRIPTION}>Descripción:</label>
         <input
@@ -127,7 +145,15 @@ function ProductForm({ onAddProduct }) {
           required
         />
       </div>
-      <button type="submit">Agregar Producto</button>
+      {!productSelected ? (
+        <button type="submit" className="button">
+          Agregar Producto
+        </button>
+      ) : (
+        <button type="submit" className="button">
+          Guardar
+        </button>
+      )}
     </form>
   );
 }
