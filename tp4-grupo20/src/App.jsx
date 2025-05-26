@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+// src/App.jsx
+import React, { useState, useEffect } from 'react';
 import ProductList from "./components/ProductList";
 import ProductForm from "./components/ProductForm";
 import SearchBar from "./components/SearchBar";
-import "./App.css";
+import './App.css';
 
 function App() {
   const [productos, setProductos] = useState([]);
@@ -18,10 +19,19 @@ function App() {
       nuevoProducto.descripcion &&
       nuevoProducto.precioUnitario !== undefined
     ) {
-      setProductos((prevProductos) => [...prevProductos, nuevoProducto]);
+   
+      const productoConId = { ...nuevoProducto, id: nuevoProducto.id || Date.now().toString() };
+      setProductos((prevProductos) => [...prevProductos, productoConId]);
     } else {
       console.error("Intento de agregar un producto inválido:", nuevoProducto);
     }
+  };
+
+  
+  const handleDeleteProduct = (productIdToDelete) => {
+    setProductos((prevProductos) =>
+      prevProductos.filter((producto) => producto.id !== productIdToDelete)
+    );
   };
 
   return (
@@ -30,7 +40,11 @@ function App() {
       <ProductForm onAddProduct={handleAddProduct} />
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <hr />
-      <ProductList productos={productos} searchTerm={searchTerm} />
+      <ProductList
+        productos={productos}
+        searchTerm={searchTerm}
+        onDeleteProduct={handleDeleteProduct} 
+      />
     </div>
   );
 }
