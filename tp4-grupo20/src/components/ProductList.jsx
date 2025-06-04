@@ -1,53 +1,28 @@
-import React, { useMemo } from "react";
-import ProductItem from "./ProductItem";
-import "../styles/ProductList.css";
+import ProductItem from './ProductItem'
+import '../styles/ProductList.css'
 
-function ProductList({
-  productos,
-  searchTerm,
-  setProductSelected,
-  onDeleteProduct,
-  productSelected,
+export default function ProductList({
+  products,
+  selectedProductId,
+  onSelectProduct,
+  showActions,
+  onDelete,
+  onEdit
 }) {
-  // Filtrar productos según el término de búsqueda
-  const productosFiltrados = useMemo(
-    () =>
-      productos.filter((producto) => {
-        const idString = producto.id
-          ? String(producto.id).toLowerCase().trim()
-          : "";
-        const descripcionString = producto.descripcion
-          ? producto.descripcion.toLowerCase().trim()
-          : "";
-        const searchTermLower = searchTerm.toLowerCase().trim();
-
-        return (
-          idString.includes(searchTermLower) ||
-          descripcionString.includes(searchTermLower)
-        );
-      }),
-    [productos, searchTerm]
-  );
-
   return (
-    <div>
-      <h2>Lista de Productos</h2>
-      {productosFiltrados.length === 0 ? (
-        <p>No hay productos cargados o que coincidan con la búsqueda.</p>
-      ) : (
-        productosFiltrados.map((producto, index) => (
-          <ProductItem
-            key={producto.id}
-            onDeleteProduct={onDeleteProduct}
-            onSelected={setProductSelected}
-            producto={producto}
-            isProductSelected={productSelected?.id === producto.id}
-            index={index}
-          />
-        ))
-      )}
+    <div className="product-list">
+      {products.length === 0 && <p>No hay productos para mostrar</p>}
+      {products.map((product) => (
+        <ProductItem
+          key={product.id}
+          product={product}
+          isSelected={selectedProductId === product.id}
+          onSelect={() => onSelectProduct(product.id)}
+          showActions={showActions && selectedProductId === product.id}
+          onDelete={onDelete}
+          onEdit={onEdit}
+        />
+      ))}
     </div>
-  );
+  )
 }
-
-export default ProductList;

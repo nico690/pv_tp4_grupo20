@@ -1,20 +1,19 @@
-import React from 'react';
-import '../styles/SearchBar.css';
+import React from 'react'
+import '../styles/SearchBar.css'
 
+export default function SearchBar({ searchTerm, setSearchTerm }) {
+  const handleChange = (e) => {
+    setSearchTerm(e.target.value)
+  }
 
-const SearchBar = ({ searchTerm, setSearchTerm }) => {
   return (
-    <div>
-      <h2>Buscar Producto</h2>
+    <div className="search-bar">
       <input
         type="text"
-        placeholder="Id o Descripcion..."
+        placeholder="Buscar por ID o descripción..."
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="p-2 border rounded w-full mb-4"
+        onChange={handleChange}
       />
     </div>
-  );
-};
-
-export default SearchBar;
+  )
+}

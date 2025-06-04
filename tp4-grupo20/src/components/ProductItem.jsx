@@ -1,50 +1,45 @@
-import React from "react";
-import { STRING_EMPTY } from "../utils/constant";
-import DeleteProduct from "./DeleteProduct";
-import "../styles/ProductItem.css";
+import '../styles/ProductItem.css'
 
-const ProductItem = ({
-  producto,
-  onSelected,
-  isProductSelected,
-  index,
-  onDeleteProduct,
-}) => {
-  const {
-    id,
-    descripcion,
-    precioUnitario,
-    descuento,
-    precioConDescuento,
-    stock,
-  } = producto;
-
-  const handleSelected = () => {
-    onSelected(!isProductSelected ? { ...producto, index } : null);
-  };
+export default function ProductItem({
+  product,
+  isSelected,
+  onSelect,
+  showActions,
+  onDelete,
+  onEdit
+}) {
+  const precioConDescuento = (
+    product.precioUnitario *
+    (1 - product.descuento / 100)
+  ).toFixed(2)
 
   return (
     <div
-      className={`product-item-card product ${
-        isProductSelected ? "product-selected" : STRING_EMPTY
-      }`}
-      onClick={handleSelected}
+      className={`product-item ${isSelected ? 'selected' : ''}`}
+      onClick={onSelect}
+      tabIndex={0}
+      role="button"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') onSelect()
+      }}
     >
-      <h3>
-        {descripcion} (ID: {id})
-      </h3>
-      <p>
-        Precio Unitario: ${precioUnitario ? precioUnitario.toFixed(2) : "N/A"}
-      </p>
-      <p>Descuento: {descuento !== undefined ? `${descuento}%` : "N/A"}</p>
-      <p>
-        Precio con Descuento: $
-        {precioConDescuento ? precioConDescuento.toFixed(2) : "N/A"}
-      </p>
-      <p>Stock: {stock !== undefined ? stock : "N/A"}</p>
-      <DeleteProduct productId={id} onDelete={onDeleteProduct} />
-    </div>
-  );
-};
+      <p><strong>ID:</strong> {product.id}</p>
+      <p><strong>Descripción:</strong> {product.descripcion}</p>
+      <p><strong>Precio Unitario:</strong> ${product.precioUnitario.toFixed(2)}</p>
+      <p><strong>Descuento:</strong> {product.descuento}%</p>
+      <p><strong>Precio con Desc:</strong> ${precioConDescuento}</p>
+      <p><strong>Stock:</strong> {product.stock}</p>
 
-export default ProductItem;
+      {showActions && (
+        <div className="product-item-actions">
+          <button type="button" onClick={(e) => { e.stopPropagation(); onEdit() }}>
+            Modificar
+          </button>
+          <button type="button" onClick={(e) => { e.stopPropagation(); onDelete() }}>
+            Eliminar
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
