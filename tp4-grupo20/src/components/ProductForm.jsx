@@ -1,161 +1,128 @@
-import React, { useEffect, useState, useCallback } from "react";
-import "../styles/ProductForm.css";
-import { STRING_EMPTY } from "../utils/constant";
+import { useState, useEffect } from 'react'
+import '../styles/ProductForm.css'
 
-const FIELD_NAMES = {
-  DESCRIPTION: "description",
-  UNIT_PRICE: "unitPrice",
-  DISCOUNT: "discount",
-  STOCK: "stock",
-};
-const INITIAL_VALUES = {
-  [FIELD_NAMES.DESCRIPTION]: STRING_EMPTY,
-  [FIELD_NAMES.UNIT_PRICE]: STRING_EMPTY,
-  [FIELD_NAMES.DISCOUNT]: STRING_EMPTY,
-  [FIELD_NAMES.STOCK]: STRING_EMPTY,
-};
+export default function ProductForm({ onSubmit, productToEdit, cancelEdit }) {
+  const [formData, setFormData] = useState({
+    descripcion: '',
+    precioUnitario: '',
+    descuento: '',
+    stock: ''
+  })
 
-function ProductForm({ onAddProduct, productSelected, onAddDate }) {
-  const [values, setValues] = useState(INITIAL_VALUES);
   useEffect(() => {
-    if (productSelected)
-      setValues({
-        description: productSelected.descripcion,
-        unitPrice: productSelected.precioUnitario,
-        discount: productSelected.descuento,
-        stock: productSelected.stock,
-      });
-    else {
-      setValues(INITIAL_VALUES);
+    if (productToEdit) {
+      setFormData({
+        descripcion: productToEdit.descripcion,
+        precioUnitario: productToEdit.precioUnitario.toString(),
+        descuento: productToEdit.descuento.toString(),
+        stock: productToEdit.stock.toString()
+      })
+    } else {
+      setFormData({
+        descripcion: '',
+        precioUnitario: '',
+        descuento: '',
+        stock: ''
+      })
     }
-  }, [productSelected]);
+  }, [productToEdit])
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }))
+  }
 
-    switch (name) {
-      case FIELD_NAMES.UNIT_PRICE:
-        if (!/^\d*\.?\d*$/.test(value)) return;
-        break;
-      case FIELD_NAMES.DISCOUNT:
-        if (!/^\d*$/.test(value)) return;
-        break;
-      case FIELD_NAMES.STOCK:
-        if (!/^\d*$/.test(value)) return;
-        break;
-      default:
-        break;
+  const validate = () => {
+    const { descripcion, precioUnitario, descuento, stock } = formData
+
+    if (!descripcion || !precioUnitario || !descuento || !stock) {
+      return 'Todos los campos son obligatorios'
     }
 
-    setValues({ ...values, [name]: value });
-  };
+    const precio = parseFloat(precioUnitario)
+    const desc = parseFloat(descuento)
+    const stk = parseInt(stock)
 
-  const handleSubmit = useCallback(
-    (e) => {
-      e.preventDefault();
+    if (isNaN(precio) || precio <= 0) {
+      return 'El precio debe ser un número positivo'
+    }
 
-      const precio = parseFloat(values.unitPrice);
-      const desc = parseInt(values.discount, 10);
-      const stck = parseInt(values.stock, 10);
+    if (isNaN(desc) || desc < 0 || desc > 100) {
+      return 'El descuento debe estar entre 0 y 100'
+    }
 
-      if (
-        !values.description ||
-        isNaN(precio) ||
-        precio < 0 ||
-        isNaN(desc) ||
-        desc < 0 ||
-        desc > 100 ||
-        isNaN(stck) ||
-        stck < 0
-      ) {
-        alert(
-          "Por favor, completa todos los campos correctamente. El descuento debe ser entre 0 y 100."
-        );
-        return;
-      }
+    if (isNaN(stk) || stk < 0) {
+      return 'El stock debe ser un número entero positivo'
+    }
 
-      const precioConDescuento = precio * (1 - desc / 100);
-      const id = productSelected?.id ?? Date.now();
+    return ''
+  }
 
-      const producto = {
-        id: id,
-        descripcion: values.description,
-        precioUnitario: precio,
-        descuento: desc,
-        precioConDescuento: precioConDescuento,
-        stock: stck,
-      };
+  const handleSubmit = (e) => {
+    e.preventDefault()
 
-      if (productSelected) {
-        onAddDate(producto);
-      } else {
-        onAddProduct(producto);
-      }
+    const validationError = validate()
+    if (validationError) {
+      alert(validationError)
+      return
+    }
 
-      setValues(INITIAL_VALUES);
-    },
-    [values, productSelected, onAddDate, onAddProduct, setValues]
-  );
+    const finalData = {
+      descripcion: formData.descripcion,
+      precioUnitario: parseFloat(formData.precioUnitario),
+      descuento: parseFloat(formData.descuento),
+      stock: parseInt(formData.stock)
+    }
+
+    onSubmit(finalData)
+
+    setFormData({
+      descripcion: '',
+      precioUnitario: '',
+      descuento: '',
+      stock: ''
+    })
+  }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2> {!productSelected ? "Agregar Producto" : "Modificar Producto"}</h2>
-      <div>
-        <label htmlFor={FIELD_NAMES.DESCRIPTION}>Descripción:</label>
-        <input
-          type="text"
-          id={FIELD_NAMES.DESCRIPTION}
-          name={FIELD_NAMES.DESCRIPTION}
-          value={values.description}
-          onChange={handleInputChange}
-          required
-        />
+    <form className="product-form" onSubmit={handleSubmit}>
+      <input
+        type="text"
+        name="descripcion"
+        placeholder="Descripción"
+        value={formData.descripcion}
+        onChange={handleChange}
+      />
+      <input
+        type="number"
+        name="precioUnitario"
+        placeholder="Precio Unitario"
+        value={formData.precioUnitario}
+        onChange={handleChange}
+        step="0.01"
+      />
+      <input
+        type="number"
+        name="descuento"
+        placeholder="Descuento (%)"
+        value={formData.descuento}
+        onChange={handleChange}
+        step="0.01"
+      />
+      <input
+        type="number"
+        name="stock"
+        placeholder="Stock"
+        value={formData.stock}
+        onChange={handleChange}
+      />
+      <div className="form-buttons">
+        <button type="submit">{productToEdit ? 'Modificar' : 'Agregar'}</button>
+        {productToEdit && <button type="button" onClick={cancelEdit}>Cancelar</button>}
       </div>
-      <div>
-        <label htmlFor={FIELD_NAMES.UNIT_PRICE}>Precio Unitario:</label>
-        <input
-          type="number"
-          id={FIELD_NAMES.UNIT_PRICE}
-          name={FIELD_NAMES.UNIT_PRICE}
-          value={values.unitPrice}
-          onChange={handleInputChange}
-          step="0.01"
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor={FIELD_NAMES.DISCOUNT}>Descuento (%):</label>
-        <input
-          type="number"
-          id={FIELD_NAMES.DISCOUNT}
-          name={FIELD_NAMES.DISCOUNT}
-          value={values.discount}
-          onChange={handleInputChange}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor={FIELD_NAMES.STOCK}>Stock:</label>
-        <input
-          type="number"
-          id={FIELD_NAMES.STOCK}
-          name={FIELD_NAMES.STOCK}
-          value={values.stock}
-          onChange={handleInputChange}
-          required
-        />
-      </div>
-      {!productSelected ? (
-        <button type="submit" className="button">
-          Agregar Producto
-        </button>
-      ) : (
-        <button type="submit" className="button">
-          Guardar
-        </button>
-      )}
     </form>
-  );
+  )
 }
-
-export default ProductForm;

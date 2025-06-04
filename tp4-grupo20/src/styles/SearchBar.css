@@ -1,13 +1,23 @@
 .search-bar {
-  margin-bottom: 1.5rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .search-bar input {
   width: 100%;
-  padding: 10px;
-  border-radius: 4px;
-  border: none;
+  max-width: 600px;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
   font-size: 1rem;
-  background-color: #1e1e1e;
-  color: white;
+  background-color: #2C3E60;
+  color: #D0D7E5;
+  border: 1px solid #3f557f;
+  transition: border-color 0.3s ease;
+}
+
+.search-bar input:focus {
+  border-color: #00ABE4;
+  box-shadow: 0 0 8px rgba(0, 171, 228, 0.4);
+  outline: none;
 }
