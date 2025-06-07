@@ -1,15 +1,16 @@
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
-  background-color: #121B2C; 
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #D0D7E5; 
+  background-color: #121b2c;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #d0d7e5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -19,34 +20,37 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   padding: 2rem 3rem;
-  background-color: #1B273D; 
+  background-color: #1b273d;
 }
-
 
 section {
   width: 100%;
   min-height: 150px;
   margin-bottom: 2rem;
   padding: 1.2rem 1.5rem;
-  background-color: #243654; 
+  background-color: #243654;
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 171, 228, 0.15);
 }
 
+h1 {
+  text-align: center;
+}
 
-h1, h2 {
-  color: #7FB9F6;
+h1,
+h2 {
+  flex-direction: column;
+  color: #7fb9f6;
   margin-bottom: 1rem;
   user-select: none;
 }
-
 
 .feedback-message {
   position: fixed;
   bottom: 1.5rem;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #005a9c; 
+  background-color: #005a9c;
   color: #e0e7ff;
   padding: 0.9rem 2rem;
   border-radius: 8px;
@@ -56,8 +60,9 @@ h1, h2 {
   user-select: none;
 }
 
-
-input, select, textarea {
+input,
+select,
+textarea {
   background-color: #2c3e60;
   border: 1px solid #3f557f;
   color: #d1d9f1;
@@ -67,12 +72,13 @@ input, select, textarea {
   transition: border-color 0.3s ease;
 }
 
-input:focus, select:focus, textarea:focus {
+input:focus,
+select:focus,
+textarea:focus {
   outline: none;
   border-color: #00abe4;
   box-shadow: 0 0 6px #00abe4;
 }
-
 
 button {
   background-color: #00abe4;
